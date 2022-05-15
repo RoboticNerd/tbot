@@ -3,15 +3,16 @@ from rclpy.node import Node
 from gpiozero import Servo
 from time import sleep
 
-from std_msgs.msg import Int32
+from std_msgs.msg import Float32
 
+servo = Servo(25)
 
 class ServoListen(Node):
 
     def __init__(self):
         super().__init__('servo_listen')
         self.subscription = self.create_subscription(
-            Int32,
+            Float32,
             'topic',
             self.listener_callback,
             10)
@@ -19,6 +20,8 @@ class ServoListen(Node):
 
     def listener_callback(self, msg):
         self.get_logger().info('I heard: "%s"' % msg.data)
+        servo.value = msg.data
+        
 
 
 def main(args=None):
